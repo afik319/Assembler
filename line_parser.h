@@ -1,4 +1,3 @@
-/*Created by elifu on 02/08/2023.*/
 
 #include "help_functions.h"
 
@@ -8,6 +7,18 @@
 #define VALID_ADDRSS_MTHDS 3
 #define REGISTERS_NUM 8
 #define INST_SIZE 16
+#define DATA_SIZE 10
+#define LOW_VALUE -2048
+#define HIGH_VALUE 2047
+#define ERROR_ALLOC 32
+#define MEMORY_MAX_ADDRESS 1023
+#define START_MEMORY_ADDRESS 100
+#define AVAILABLE_MEMORY 923
+#define ERROR_INT_STRING -1
+#define TWO_SIGNS_STRING_ERROR -2
+#define TWO_QUOTES 2
+#define WORDS_SKIP_LABEL_STRING 2
+#define WORDS_SKIP_STRING 1
 
 /*Instruction Line Data Structures:*/
 
@@ -34,7 +45,9 @@ typedef enum opcode_names {
 
 typedef enum {SUCCESS, INVALID_FIRST_WORD,UNDEFINED_DATA_NAME, UNNECESSARY_LABEL,OPCODE_LABEL_NAME ,INVALID_ARGS_AMOUNT
               ,INVALID_ARGS_ADD_METHOD, INVALID_INST_ARGS,COMMA_AT_END_OF_D_WORD,MISSING_COMMA,ILLEGAL_COMMA,MULT_COMMAS,
-              EXTERN_DEFINED,CHAR_AFTER_QUOTE,NO_CONTENT_DIRECTION, DATA_RANGE,LONG_LABEL,LABEL_FIRST_CHAR,INVALID_LABEL_NAME,IMMEDIATE_RANGE
+              EXTERN_DEFINED,CHAR_AFTER_QUOTE,NO_CONTENT_DIRECTION, DATA_RANGE,LONG_LABEL,LABEL_FIRST_CHAR,
+              INVALID_LABEL_NAME,IMMEDIATE_RANGE,LONG_FIRST_WORD,COMMA_BEGIN,TWICE_LABEL,OUT_OF_MEMORY,ENTRY_ONLY,
+              UN_DIGIT_DATA,TWO_SIGNS,WRONG_FIRST,MISSING_QUOTE,CHAR_BEFORE_QUOTE
               }error_index;/*all errors option */
 
 
@@ -53,11 +66,6 @@ typedef struct{
 
 extern op_args_mthd op_args_arr [16];
 
-union arg_name{
-    char* label_name;
-    char* rgister;
-    int immediate;
-};
 
 typedef struct instruction {
     op_args_mthd* op_args_type;
@@ -76,15 +84,15 @@ typedef enum direction_type {
     invalid_data
 }direction_type;
 
-typedef struct data_arr { 
-    int *data_arr;/*if it's a data*/
+typedef struct {
+    int* data_arr;/*if it's a data*/
     size_t data_arr_size;
 }data_arr;
 
-typedef struct string_data { 
+typedef struct {
     char* string; /*if it's a string*/
     int str_len;
-}str_d;
+}string_data;
 
 typedef struct {
     char** entry;
@@ -96,14 +104,14 @@ typedef struct {
     int ex_size;
 }extern_arr;
 
-typedef union direction_content{
+typedef union{
     data_arr* d_arr;
-    str_d* string;
+    string_data* string;
     entry_arr* en_arr;
     extern_arr* ex_arr;
 }direction_content;
 
-typedef struct direction {
+typedef struct {
     direction_type d_type;
     direction_content* d_content;
     int dir_line_keeper;
@@ -145,11 +153,11 @@ bool is_more_args(char *line, int *index);
 bool string_parser(char* line, line_data* ld, int* index);
 char *copy_s_args(char *string_line);
 bool data_parser(char* temp_line, line_data* ld, int* index);
-void copy_d_args(char* data_line, line_data* ld);
+bool copy_d_args(char* data_line, line_data* ld);
 bool is_valid_data(char *data_line, line_data *ld);
 bool inst_args_parser(char *temp_line, opcode code, int *index, line_data *ld);
 bool a_count_as_expected(opcode op, int args_c);
-bool set_op_args(char* data_args, line_data* ld);
+bool set_op_args(char* inst_args, line_data* ld);
 void set_src_add (char* arg, line_data* ld);
 void set_dest_add (char* args, line_data* ld);
 bool is_immediate(char* arg,line_data* ld);
@@ -159,3 +167,9 @@ bool is_inst_arg_valid(char *argument, line_data *ld);
 void set_extern_labels(line_data * ld, char* args);
 void set_entry_labels(line_data * ld, char* args);
 bool is_commas_valid(char* args, line_data* ld);
+void error_allocation_fix(char** src_name , char** dest_name);
+bool two_quotes(char *line);
+bool chars_before_quotes(char *line , bool label_before);
+
+
+

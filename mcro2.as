@@ -1,0 +1,16 @@
+mcro m1
+.entry START
+    .extern EXTERN
+MAIN:   mov @r1, @r2
+    LOOP:   cmp -5, @r3
+endmcro
+SUBROUTINE: bne EXTERNVAR
+stop
+m1
+ENDLOOP: dec K
+jmp LOOP
+mcro mov
+.entry START
+endmcro
+bne ENDLOOP
+add VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV, RRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR

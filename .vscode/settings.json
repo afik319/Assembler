@@ -1,7 +1,30 @@
 {
-    "files.associations": {
-        "<calendar>.java": "utf8",
-        "compare": "c",
-        "type_traits": "c"
-    }
+  "files.associations": {
+    "<calendar>.java": "utf8",
+    "stdarg.h": "c",
+    "help_functions.h": "c",
+    "stdlib.h": "c",
+    "libc-header-start.h": "c",
+    "features.h": "c",
+    "stubs.h": "c",
+    "line_parser.h": "c",
+    "type_traits": "c",
+    "pre_assembler.h": "c"
+  },
+  "C_Cpp_Runner.cCompilerPath": "/usr/bin/gcc",
+  "C_Cpp_Runner.cppCompilerPath": "/usr/bin/g++",
+  "C_Cpp_Runner.debuggerPath": "/usr/bin/gdb",
+  "C_Cpp_Runner.cStandard": "${default}",
+  "C_Cpp_Runner.cppStandard": "${default}",
+  "C_Cpp_Runner.enableWarnings": true,
+  "C_Cpp_Runner.includePath": [
+    "/usr/lib/gcc/x86_64-redhat-linux/11/include",
+    "/usr/local/include",
+    "/usr/include"
+  ],
+  "C_Cpp_Runner.useAddressSanitizer": false,
+  "C_Cpp_Runner.useUndefinedSanitizer": false,
+  "C_Cpp_Runner.useLeakSanitizer": false,
+  "C_Cpp_Runner.showCompilationTime": false,
+  "C_Cpp_Runner.useLinkTimeOptimization": false
 }

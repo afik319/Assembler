@@ -10,7 +10,7 @@ typedef struct mcro_table {
     int index;
     int max_allocated_mcro_lines;
 } mcro_table;
- 
+
 mcro_table_p create_mcro_table()
 {
     int i;
@@ -46,23 +46,37 @@ bool valid_mcro_name(char* mcro_name)
             break;
         }
     }
-    return valid;    
+    for(i = 0 ; i < DIFF_REG_COUNT ; i++) {
+        if(strcmp(mcro_name , reg_names_arr[i]) == 0) {
+            valid = false;
+            break;
+        }
+    }
+    for(i = 0 ; i < DIFF_DIR_COUNT ; i++) {
+        if(strcmp(mcro_name , directions_names_arr[i]) == 0) {
+            valid = false;
+            break;
+        }
+    }
+    return valid;
 }
 
 void mcro_table_line_increase(mcro_table_p m1 , int index) {
+    int new_max_size;
     m1->lines_max_inside_each_mcro[index] *= 2;
-    m1->line[index] = realloc(m1->line[index] , sizeof(char) * MAX_LINE_LEN * m1->lines_max_inside_each_mcro[index]);
+    new_max_size = sizeof(char) * MAX_LINE_LEN * m1->lines_max_inside_each_mcro[index];
+    safe_realloc(NULL , &(m1->line[index]) , NULL , new_max_size , 'c');
 }
+
 
 void mcro_table_count_increase(mcro_table_p m1) {
     int i , old_count;
     old_count = m1->max_allocated_mcro_lines;
     m1->max_allocated_mcro_lines *= 2;
-    printf("new count: %d\n" , m1->max_allocated_mcro_lines);
-    m1->mcro_name = realloc(m1->mcro_name , sizeof(char*) * m1->max_allocated_mcro_lines);
-    m1->line = realloc(m1->line , sizeof(char*) * m1->max_allocated_mcro_lines);
-    m1->lines_max_inside_each_mcro = realloc(m1->lines_max_inside_each_mcro , sizeof(int) * m1->max_allocated_mcro_lines);
-    m1->lines_count_inside_each_mcro = realloc(m1->lines_count_inside_each_mcro , sizeof(int) * m1->max_allocated_mcro_lines);
+    safe_realloc(&m1->mcro_name , NULL , NULL , sizeof(char*) * m1->max_allocated_mcro_lines , 'd');
+    safe_realloc(&m1->line , NULL , NULL , sizeof(char*) * m1->max_allocated_mcro_lines , 'd');
+    safe_realloc(NULL , NULL , &m1->lines_max_inside_each_mcro , sizeof(int) * m1->max_allocated_mcro_lines , 'i');
+    safe_realloc(NULL , NULL , &m1->lines_count_inside_each_mcro , sizeof(int) * m1->max_allocated_mcro_lines , 'i');
 
     for (i = old_count ; i < m1->max_allocated_mcro_lines; i ++) {
         m1->mcro_name[i] = safe_malloc(sizeof(char) * MAX_MCRO_NAME);
@@ -115,39 +129,30 @@ int is_exist_mcro (mcro_table_p m1 , char *mcro_name_to_check)
 void insert_mcro(mcro_table_p m1 , char *mcro_name_to_check , char *line , int method) {
     if(method == 1 && is_exist_mcro(m1 , mcro_name_to_check) == -1 && valid_mcro_name(mcro_name_to_check)) {
         strcpy(m1->mcro_name[m1->index] , mcro_name_to_check);
-        printf("new mcro name: %s\n" , m1->mcro_name[m1->index]);
     }
 
     else if(method == 2) {
-        printf("index is: %d\n" , m1->index);
         if(m1->index + 1 == m1->max_allocated_mcro_lines){
             mcro_table_count_increase(m1);
-            printf("mcros max count increase in mcro %s to %d\n" , m1->mcro_name[m1->index] , m1->max_allocated_mcro_lines);
-        } 
-        if(m1->lines_count_inside_each_mcro[m1->index] + 1 == m1->lines_max_inside_each_mcro[m1->index]) {
-            printf("was: %d of %d\n" , m1->lines_count_inside_each_mcro[m1->index] , m1->lines_max_inside_each_mcro[m1->index]);
-            mcro_table_line_increase(m1 , m1->index);
-            printf("increase size inside mcro %s to %d\n" , m1->mcro_name[m1->index] , m1->lines_max_inside_each_mcro[m1->index]);
         }
-        printf("__________________\n");
+        if(m1->lines_count_inside_each_mcro[m1->index] + 1 == m1->lines_max_inside_each_mcro[m1->index]) {
+            mcro_table_line_increase(m1 , m1->index);
+        }
         strcat(m1->line[m1->index] , line);
         m1->lines_count_inside_each_mcro[m1->index]++;
-        printf("count in index is: %d\n" , m1->lines_count_inside_each_mcro[m1->index]);
     }
 }
 
 void free_mcro_table(mcro_table_p m1)
 {
     int index;
-
-    printf("finish\n");
     for (index = 0 ; index < m1->max_allocated_mcro_lines ; index++) {
-        free_or_close(1 , 2 , m1->mcro_name[index] , m1->line[index]);  
+        free_or_close(1 , 2 , m1->mcro_name[index] , m1->line[index]);
     }
-    safe_free(m1->lines_max_inside_each_mcro);
-    safe_free(m1->lines_count_inside_each_mcro);
-    safe_free(m1->mcro_name);
-    safe_free(m1->line);
+    safe_free_double_p((void**) &m1->lines_max_inside_each_mcro);
+    safe_free_double_p((void**) &m1->lines_count_inside_each_mcro);
+    safe_free_double_p((void**) &m1->mcro_name);
+    safe_free_double_p((void**) &m1->line);
 }
 
 void str_copy(char **copy , char **original , bool start_no_spaces)
@@ -168,8 +173,9 @@ void str_copy(char **copy , char **original , bool start_no_spaces)
     }
 }
 
-void mcro_dec_line(int* index, int* index_copy, bool* mcro_flag, char** curr_line_index, char* curr_line, 
+bool mcro_dec_line(int* index, int* index_copy, bool* mcro_flag, char** curr_line_index, char* curr_line,
                    char** mcro_name, mcro_table_p m1, char** line_copy, int line_number) {
+    char *temp_name;
     *mcro_flag = false;
     (*index) += MCRO_LEN;
     *curr_line_index = &curr_line[*index];
@@ -177,7 +183,16 @@ void mcro_dec_line(int* index, int* index_copy, bool* mcro_flag, char** curr_lin
     while(!(isspace(curr_line[*index_copy])) && (curr_line[*index_copy] != '\0'))
         (*index_copy)++;
     clean_white(curr_line , index_copy);
-    *mcro_name = strtok(&curr_line[*index] , " \f\r\t\n");
+    temp_name = strtok(&curr_line[*index] , " \f\r\t\n");
+    if(strlen(temp_name) > MAX_MCRO_NAME){
+        printf("In line: %d\n" , line_number);
+        printf("ERROR: mcro name too long.\n%s\nPlease fix it and try again.\n" , temp_name);
+        temp_name = NULL;
+        valid_pre = false;
+        free_or_close(1 , 1 , *line_copy);
+        return false;
+    }
+    *mcro_name = temp_name;
     (*mcro_name)[strlen(*mcro_name)] = '\0';
     insert_mcro(m1 , *mcro_name , NULL , 1);
     if(!is_all_white(&(curr_line[*index_copy]))) {
@@ -185,93 +200,111 @@ void mcro_dec_line(int* index, int* index_copy, bool* mcro_flag, char** curr_lin
         line_number , strtok(*line_copy , "\n\0"));
         valid_pre = false;
     }
-        
     else if(is_exist_mcro(m1 , *mcro_name) != -1) {
-        printf("ERROR: macro named \"%s\" declared twice" , *mcro_name);
+        printf("ERROR: macro named \"%s\" declared twice\n" , *mcro_name);
         valid_pre = false;
     }
     else if(!valid_mcro_name(*mcro_name)) {
-        printf("ERROR: macro name \"%s\" is name of instruction\n" , *mcro_name);
+        printf("In line %d.\n" , line_number);
+        printf("ERROR: macro name \"%s\" is name of instruction\nPlease change it and try again.\n" , *mcro_name);
         valid_pre = false;
     }
     else *mcro_flag = true;
     free_or_close(1 , 1 , *line_copy);
+    return true;
+}
+
+void line_inside_mcro_dec(char* curr_line , char* corrected_line , int* index , bool* mcro_flag , char* mcro_name , mcro_table_p m1){
+    clean_white(curr_line , index);
+    if(!strncmp(&curr_line[*index] , "endmcro" , ENDMCRO_LEN) && is_all_white(&curr_line[*index + ENDMCRO_LEN])){
+        *mcro_flag = false;
+        mcro_name = NULL;
+        (m1->index)++;
+    } /* "endmcro" line */
+    else {
+        corrected_line = line_template(curr_line);
+        if(corrected_line[*index] != '\0') {
+            insert_mcro(m1 , NULL , corrected_line , 2);
+        }
+        free_or_close(1 , 1 , corrected_line);
+    } /*line of content inside macro declaration */
+}
+
+void regular_line_add(char* curr_line , char** corrected_line , int* index , FILE* fptr2){
+    if (!is_all_white(curr_line)) {
+        *corrected_line = line_template(&(curr_line[*index]));
+        if((*corrected_line)[0] != '\0')
+            fputs(*corrected_line , fptr2);
+    }
 }
 
 
-int pre_as(char* path) {
- int index , index_copy , line_number;
+int pre_as(char* path , char* am_file_name2) {
+    int index , index_copy , line_number;
     char *am_file_name , *curr_line , *mcro_name , *line_copy , *corrected_line , *inside_mcro , *curr_line_index;
     FILE *fptr , *fptr2;
     mcro_table* m1;
     bool mcro_flag;
 
+    am_file_name = NULL;
     strings_letter_change(strlen(path) - 1 , 'm' , path , &am_file_name);
-    line_copy = NULL , mcro_name = NULL;
+    strcpy(am_file_name2 , am_file_name);
+    line_copy = NULL , mcro_name = NULL , corrected_line = NULL;
     line_number = 0;
     mcro_flag = false;
     fptr = fopen(path , "r");
     fptr2 = fopen(am_file_name , "w");
+    valid_pre = true;
+
+    if(is_null_file(fptr , fptr2 , &path ,  &am_file_name)) {
+        safe_free_double_p((void**) &am_file_name);
+        return false;
+    }
+    if(is_null_file_content(path)) {
+        free_or_close(2,2,fptr,fptr2);
+        safe_free_double_p((void**) &am_file_name);
+        return false;
+    }
+
     m1 = create_mcro_table();
     curr_line = safe_malloc(sizeof(char) * MAX_GET_LEN);
-    
-    if(is_null_file(fptr , fptr2 , &path ,  &am_file_name)) {
-        free_or_close(1 , 1 , curr_line);
-        return -1;
-    }
-    
-    while(fgets(curr_line , MAX_GET_LEN , fptr) != NULL) {
-        index = 0 , line_number++;
 
+    while(fgets(curr_line , MAX_GET_LEN , fptr) != NULL && valid_pre != false) {
+        index = 0 , line_number++;
         clean_white(curr_line , &index);
         if(strlen(curr_line) > MAX_LINE_LEN) {
-            printf("Error: Line %d too long and will be omitted.\n" , line_number);
+            printf("Error: Line %d too long, file converting canceled.\nPlease fix it and try again.\n" , line_number);
             valid_pre = false;
             continue;
         }  /*too long line check*/
-        if(is_all_white(curr_line) || curr_line[index] == ';') {
-            continue;
-        } /*empty or note line skip*/
+        if(is_all_white(curr_line) || curr_line[index] == ';')
+            continue; /*empty or note line skip*/
         is_mcro_line(m1 , curr_line , &inside_mcro);
         if(inside_mcro != NULL) {
             fputs(inside_mcro , fptr2);
             free_or_close(1 , 1 , inside_mcro);
-            continue; 
+            continue;
         } /*line to replace with a macro content case. was without mcro flag check */
         index_copy = index + MCRO_LEN;
         clean_white(curr_line , &index_copy);
         if(!strncmp(&curr_line[(index)] , "mcro" , MCRO_LEN) && !isspace(curr_line[index_copy]) &&
-        !(strlen(&curr_line[index]) > MCRO_LEN && !isspace(curr_line[index + MCRO_LEN]))) { 
-            mcro_dec_line(&index, &index_copy , &mcro_flag, &curr_line_index, curr_line, &mcro_name , m1, &line_copy, line_number);
+           !(strlen(&curr_line[index]) > MCRO_LEN && !isspace(curr_line[index + MCRO_LEN]))){
+            if(!mcro_dec_line(&index, &index_copy , &mcro_flag, &curr_line_index, curr_line, &mcro_name , m1, &line_copy, line_number)){
+                valid_pre = false;
+                break;
+            }
+                
         } /* case: optional macro declaration line */
-        else if(!mcro_flag) { 
-            if (!is_all_white(curr_line)) {
-                corrected_line = line_template(&(curr_line[index]));
-                if(corrected_line[index] != '\0')
-                    fputs(corrected_line , fptr2);
-                free_or_close(1 , 1 , corrected_line);
-            }  
-        } /* case: regular line (not in macro declaration and not empty) */
-        else { 
-            clean_white(curr_line , &index);
-            if(!strncmp(&curr_line[index] , "endmcro" , ENDMCRO_LEN) && is_all_white(&curr_line[index + ENDMCRO_LEN])){
-                mcro_flag = false; 
-                mcro_name = NULL;
-                (m1->index)++;
-            } /* "endmcro" line */
-            else {
-                corrected_line = line_template(curr_line);
-                if(corrected_line[index] != '\0') {
-                    insert_mcro(m1 , NULL , corrected_line , 2);
-                }
-                free_or_close(1 , 1 , corrected_line);
-            } /*line of content inside macro declaration */
-        } /* case: line inside macro declaration */       
+        else if(!mcro_flag){
+            regular_line_add(curr_line ,&corrected_line , &index , fptr2);
+            safe_free_double_p((void**) &corrected_line);
+        }
+        else line_inside_mcro_dec(curr_line , corrected_line , &index , &mcro_flag , mcro_name , m1);
     }
     free_or_close(2 , 2 , fptr , fptr2);
     free_or_close(1 , 3 , am_file_name ,  curr_line , inside_mcro);
     free_mcro_table(m1);
-    safe_free(m1);
+    safe_free_double_p((void**) &m1);
     return valid_pre;
 }
 
@@ -281,90 +314,71 @@ void free_or_close(int method , int count, ...) {
     FILE *ptr;
     va_list args;
     va_start(args, count);
-    
+
     for(i = 0 ; i < count ; i++) {
         if(method == 1) {
             str = va_arg(args, char*);
-            safe_free(str);
-        }  
+            safe_free_double_p((void**) &str);
+        }
         else if(method == 2) {
             ptr = va_arg(args, FILE*);
-            if(ptr != NULL)
+            if(ptr != NULL){
                 fclose(ptr);
+                ptr = NULL; 
+            }
+                
         }
     }
     va_end(args);
 }
 
-int is_white(char c)
-{
-    int white = 0;
-    if(c == ' ' || c == '\t' || c == '\f' || c == '\v' || c == '\r') 
-        white = 1;
-    return white;
+
+void comma_switch(char* line , char* template_line , int* index , int* template_index){
+    char temp;
+    temp = template_line[*template_index - 1];
+    template_line[*template_index - 1] = line[*index];
+    template_line[*template_index] = temp;
 }
 
-int is_all_white(char* line)
-{
-    int white_line, i , line_len;
-    white_line = true;
-    line_len = strlen(line);
-    for(i = 0 ; i < line_len ; i++) 
-        if (!isspace(line[i]) && line[i] != '\0') 
-            return false;
-    return white_line;
+
+void one_space_separate(char* line , char* template_line , int* index , int* template_index){
+    if((*template_index) > 0 && template_line[*template_index - 1] != ' ')
+        template_line[*template_index] = ' ';
+    else (*template_index)--;
+    (*index)++;
+    clean_white(line , index);
+    (*index)--;
 }
 
-void clean_white(char* line , int* index) {
-    while(is_white(line[*index])) 
-            (*index)++;
-}
-  
+
 char* line_template(char* line) {
-    int index , template_index, extra_spaces_counter , max_extra;
-    char *template_line , temp;
+    int index , template_index , max_extra , template_len;
+    char *template_line;
 
-    index = 0 , template_index = 0 , extra_spaces_counter = 0 , max_extra = 2;
-    template_line = safe_calloc(strlen(line) + END_LINE_CHARS + max_extra , sizeof(char));
-    
+    index = 0 , template_index = 0 , max_extra = 2;
+    template_len = strlen(line) + END_LINE_CHARS + max_extra;
+    template_line = safe_calloc((template_len), sizeof(char));
+
     while(line[index] != '\n' && line[index] != '\0') {
         if(line[index] == ' ' || line[index] == '\t'){
-            if(template_index > 0 && template_line[template_index - 1] != ' ') 
-                template_line[template_index] = ' ';
-            else template_index--;
-            index++;
-            clean_white(line , &index);
-            index--;
+            one_space_separate(line , template_line , &index , &template_index);
         }
         else if (line[index] == ',' && template_index > 0 && template_line[template_index - 1] == ' ' && strstr(line , ".string") == NULL){
-            temp = template_line[template_index - 1];
-            template_line[template_index - 1] = line[index];
-            template_line[template_index] = temp;
-        }   
-        else if(template_index > 0 && template_line[template_index - 1] == ',' && strstr(line , ".string") == NULL) {
-            template_line[template_index] = ' ';
-            extra_spaces_counter++;
-            if(extra_spaces_counter == max_extra) {
-                max_extra *= 2;
-                template_line = realloc(template_line , sizeof(char) * strlen(line) + END_LINE_CHARS + max_extra);
-            }
-	        template_index++;
-            template_line[template_index] = line[index];
-            clean_white(line , &index);  
+            comma_switch(line , template_line , &index , &template_index);
         }
         else template_line[template_index] = line[index];
-        index++; 
-        template_index++; 
+        index++;
+        template_index++;
     }
     template_line[template_index] = '\n' , template_line[template_index + 1] = '\0';
-    return template_line; 
+    return template_line;
 }
 
 void string_copy(char *first , char *copy) {
     int compare_index , path_len;
     path_len = strlen(first);
     for(compare_index = 0 ; compare_index <= path_len ; compare_index++)
-            copy[compare_index] = first[compare_index];
+        copy[compare_index] = first[compare_index];
 }
 
 void strings_letter_change(int letter_index , char new_letter , char* first , char **after_change)
@@ -381,9 +395,9 @@ bool is_null_file(FILE *f1 , FILE *f2 , char **first_file_name , char **second_f
     bool null_file;
     null_file = false;
     if (f1 == NULL || f2 == NULL) {
-        if(f1 == NULL) 
+        if(f1 == NULL)
             printf("Error opening \"%s\" file\n" , *first_file_name);
-        if(f2 == NULL) 
+        if(f2 == NULL)
             printf("Error opening \"%s\" file\n" , *second_file_name);
         free_or_close(2 , 2 , f1 , f2);
         if(second_file_name != NULL) {
@@ -395,7 +409,6 @@ bool is_null_file(FILE *f1 , FILE *f2 , char **first_file_name , char **second_f
     }
     return null_file;
 }
-
 
 
 

@@ -29,6 +29,8 @@ m
 prn                      -5
 bne              W
 sub              @r1,                         @r4
+.entry b1 b2 b3
+.extern n4 n5 n6
 bne L3
 L1:                         inc K
 jmp W

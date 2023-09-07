@@ -1,0 +1,218 @@
+Delivered-To: afik.ratzon@gmail.com
+Received: by 2002:a05:7108:2b37:b0:31f:733d:e455 with SMTP id v23csp2228513gdg;
+        Thu, 17 Aug 2023 15:33:11 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHIlu9ctywkfaxPT6zzR4BNI0HBpLMDeppmWjqdzO8LMY8843pbkZCkK5ydhO9dBpgovbch
+X-Received: by 2002:a17:907:1c0b:b0:99d:f0f7:4c0d with SMTP id nc11-20020a1709071c0b00b0099df0f74c0dmr5331798ejc.10.1692311591554;
+        Thu, 17 Aug 2023 15:33:11 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1692311591; cv=none;
+        d=google.com; s=arc-20160816;
+        b=Go/1ue3x+daGVzNmxDYaMPYmyz/pGut10FV3Drje8ctJ42UU7cBVsEm8vRI0s37/SZ
+         CZNyq2Ez+4l0yEhSWHgyEDis0t1tRSlq1uF/fTfRRLTzbjY0tkajwEJ77kbRBCuAAq7P
+         7ZBMuYlsPMj3QmDYj9WDo2l6xl8pzo0ixJH/Tt1BFwFb3/AN3o8syIdA6ivF4SCvRra9
+         vEf3lteqJ2xXa4k0i1k75JxQL0xXUxaFXscSSVvUvf8llJQIuHEJ7HJEDgOley8aZ7Ul
+         w1+oHt6LOOxA7g48EyhPi+zICHa6hY/ErbvxHI5h87WAsl4GoUBH4kZdd7lVTCkvKDKb
+         QBlQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20160816;
+        h=mime-version:content-language:accept-language:in-reply-to
+         :references:message-id:date:thread-index:thread-topic:subject:to
+         :from:dkim-signature;
+        bh=54UBb+jKgWdUWEAFD4ByCUm6Dxu+G0QLWDM9PfR+lg8=;
+        fh=cXPUTFlEreivbY2BtKluF00Af955fM0d4nkHIiejINs=;
+        b=ffGyQAbYKpddeVFysNQeateWq18uhryTrM119RwNGePvrlYcR1V3xn+w3Y0+THDhWi
+         xU5HrJmygdY1EvLt/naHcxpf9chcXMUa69bbmOwNaJ49dN7fFMEfe4S5fp7e1+Ky0jDM
+         MMvIeu6VjZ5NiM56pyDbsxWvQBJbkwreQm/3XruAhw0SwH7g5zY5/hyF2S5lAdYnbZ5Q
+         rPqxp4CBQpCV1LZxgAhQBDSSfmTjDsePcTIF06R6OsoeDgKJsb3sj6fG+kF3Ej78PxIC
+         MiXpl96NV3W+ygws+KZEsoYchlZY7saP5ByW1InN2PDngqLUVEXoVQ0a0RAsx+bD3dX6
+         bKAA==
+ARC-Authentication-Results: i=1; mx.google.com;
+       dkim=pass header.i=@openu.ac.il header.s=openu-ironport header.b=LyVe6qc6;
+       spf=pass (google.com: domain of roy.rachmany@openu.ac.il designates 192.114.2.6 as permitted sender) smtp.mailfrom=Roy.Rachmany@openu.ac.il;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=openu.ac.il
+Return-Path: <Roy.Rachmany@openu.ac.il>
+Received: from mx1.openu.ac.il (mx1.openu.ac.il. [192.114.2.6])
+        by mx.google.com with ESMTPS id m14-20020a170906720e00b009787b15aa51si320839ejk.713.2023.08.17.15.33.10
+        for <afik.ratzon@gmail.com>
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 17 Aug 2023 15:33:11 -0700 (PDT)
+Received-SPF: pass (google.com: domain of roy.rachmany@openu.ac.il designates 192.114.2.6 as permitted sender) client-ip=192.114.2.6;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@openu.ac.il header.s=openu-ironport header.b=LyVe6qc6;
+       spf=pass (google.com: domain of roy.rachmany@openu.ac.il designates 192.114.2.6 as permitted sender) smtp.mailfrom=Roy.Rachmany@openu.ac.il;
+       dmarc=pass (p=NONE sp=QUARANTINE dis=NONE) header.from=openu.ac.il
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=openu.ac.il; s=openu-ironport;
+  h=from:to:subject:date:message-id:references:in-reply-to:
+   mime-version;
+  bh=54UBb+jKgWdUWEAFD4ByCUm6Dxu+G0QLWDM9PfR+lg8=;
+  b=LyVe6qc6WCZkTbPCH8nt6w0uht45yCi1KZ9LBSUAEnvvYHtfSd4NgdFM
+   VY1sJEyCk2MQ8Ya8GPHcF4+kLw+IMw4HSjrl8H+0w/VM9iwl7rz5PJy6y
+   wPZ5qAh0/pPZDTsiFtWvBAUK4I8GIKOqdgYYciQ0ceoA3cDnzbO1i/sCQ
+   Kf+cFc163aBLyqkJRNxrfXh/W7tliaQRuadqcMZD17JaNDGidWYHYHqXE
+   Rf4hE1ByAYvjqOOw1kVHLZ7AU9TMcZzuNWKqIXbC5HJ5CyxfRsB5Ii/FM
+   aq9jKeHe7Yt9eWEFZVsyrMtpdSh9o3ZDbt2LkaixiYh00Mn2+FI+JN/GR
+   Q==;
+X-IronPort-AV: E=Sophos;i="6.01,181,1684789200"; 
+   d="scan'208,217";a="164200100"
+Received: from unknown (HELO Ex2016-Man-srv2.RING.OPENU.AC.IL) ([147.233.200.12])
+  by ironport1.openu.ac.il with ESMTP; 18 Aug 2023 01:33:10 +0300
+Received: from Ex2016-Man-srv1.RING.OPENU.AC.IL (147.233.200.11) by
+ Ex2016-Man-srv2.RING.OPENU.AC.IL (147.233.200.12) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.17; Fri, 18 Aug 2023 01:33:09 +0300
+Received: from Ex2016-Man-srv1.RING.OPENU.AC.IL ([fe80::c5d3:ccd2:ae19:7705])
+ by Ex2016-Man-srv1.RING.OPENU.AC.IL ([fe80::c5d3:ccd2:ae19:7705%13]) with
+ mapi id 15.01.2507.017; Fri, 18 Aug 2023 01:33:09 +0300
+From: Roy Rachmany <Roy.Rachmany@openu.ac.il>
+To: =?windows-1255?B?4PTp9yD49uXv?= <afik.ratzon@gmail.com>
+Subject: =?windows-1255?B?UkU6IPT45en36CDh7vLh4+QgLSDu7u8gMTQ=?=
+Thread-Topic: =?windows-1255?B?9Pjl6ffoIOHu8uHj5CAtIO7u7yAxNA==?=
+Thread-Index: AQHZzb3ya5jGJTR/iU62jOfbH4i8Ya/vGeS0
+Date: Thu, 17 Aug 2023 22:33:09 +0000
+Message-ID: <2621bb6c8c8d40a2bb0791c8593f0746@openu.ac.il>
+References: <CACUXfPteYfEpQdY_Xuy8xjPS+8wgX-HEFb2D78pTdCkGiuKJag@mail.gmail.com>
+In-Reply-To: <CACUXfPteYfEpQdY_Xuy8xjPS+8wgX-HEFb2D78pTdCkGiuKJag@mail.gmail.com>
+Accept-Language: he-IL, en-US
+Content-Language: he-IL
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-originating-ip: [147.233.197.31]
+Content-Type: multipart/alternative;
+	boundary="_000_2621bb6c8c8d40a2bb0791c8593f0746openuacil_"
+MIME-Version: 1.0
+
+--_000_2621bb6c8c8d40a2bb0791c8593f0746openuacil_
+Content-Type: text/plain; charset="windows-1255"
+Content-Transfer-Encoding: quoted-printable
+
+=FA=E5=EB=EC=E5 =EC=F7=E1=EC =F2=E5=E3 =F9=E1=E5=F2 =F9=EC =E3=E7=E9=E9=E4 =
+=EC=EC=E0 =E4=E5=F8=E3=FA =F0=E9=F7=E5=E3
+
+=F6=F8=F3 =E0=FA =E4=EE=E9=E9=EC =E4=E6=E4 =E5=E0=E9=F9=E5=F8=E9 =E7=E5=F4=
+=F9=FA =E4=EE=E7=EC=E4 =EE=E4=F8=E5=F4=E0 =E0=EC =E4=E4=E2=F9=E4
+
+
+________________________________
+=EE=E0=FA: =E0=F4=E9=F7 =F8=F6=E5=EF <afik.ratzon@gmail.com>
+=FE=FE=F0=F9=EC=E7: =E9=E5=ED =F8=E0=F9=E5=EF 13 =E0=E5=E2=E5=F1=E8 2023 11=
+:12
+=FE=FE=E0=EC: Roy Rachmany
+=FE=FE=F0=E5=F9=E0: =F4=F8=E5=E9=F7=E8 =E1=EE=F2=E1=E3=E4 - =EE=EE=EF 14
+
+=E4=E9=E9, =E1=E5=F7=F8 =E8=E5=E1.
+=F9=EE=E9 =E0=F4=E9=F7 =F8=F6=E5=EF (=FA.=E6 207917451) =F1=E8=E5=E3=F0=E8 =
+=E1=F7=E5=F8=F1 =F9=EC =EE=F2=E1=E3=E4 =E1=FA=EB=F0=E5=FA =EE=F2=F8=EB=E5=
+=FA.
+=E1=E9=E5=ED =F8=E1=E9=F2=E9 =EC=F4=F0=E9 =EB=F9=E1=E5=F2 =E5=F7=F6=FA =F2=
+=E1=F8=FA=E9 =F0=E9=FA=E5=E7 =E1=EB=FA=F3, =EB=E7=EC=F7 =EE=EB=EA =E1=F9=E1=
+=E5=F2=E5=FA =E4=F8=E0=F9=E5=F0=E9=ED =EE=E2=E1=EC=E5=FA =E4=FA=F0=E5=F2=E4=
+ =EE=F9=EE=F2=E5=FA=E9=E5=FA =E9=E5=FA=F8 =E5=E9=F9 =F7=E5=F9=E9 =E1=EB=FA=
+=E9=E1=E4, =E5=E1=EC=EE=E9=E3=E4.
+=E0=FA =E4=F4=F8=E5=E9=F7=E8 =E0=F0=E9 =EE=E2=E9=F9 =E9=E7=E3 =F2=ED =E0=EC=
+=E9=F0=E5=F8 =F4=E5=F7=F1 =EE=E6=F8=E7=E9 =EB=E0=F9=F8 =E7=E9=EC=F7=F0=E5 =
+=E0=FA =E4=F2=E1=E5=E3=E4 =E1=E9=F0=E9=F0=E5 =EC=E7=EC=F7=E9=ED =F0=F4=F8=
+=E3=E9=ED.
+=E0=F0=E9 =EE=F9=FA=E3=EC =E5=EE=F0=F1=E4 =EC=F2=EE=E5=E3 =E1=FA=E0=F8=E9=
+=EA =E4=E9=F2=E3 =E4=EE=F7=E5=F8=E9, =E0=EA =E6=E4 =F0=F2=F9=E4 =EE=F2=E8 =
+=EE=E0=FA=E2=F8 =EE=E1=E7=E9=F0=E4 =F4=E9=E6=E9=FA =E1=F2=F7=E1=E5=FA =E4=
+=F0=E9=FA=E5=E7 =EB=E9=E5=E5=EF =F9=E1=F8=F7=F2 =E9=F9 =EE=F1=F4=F8 =E4=E9=
+=E1=E7=F0=E5=E9=E5=FA =E5=EE=E8=EC=E5=FA =F0=E5=F1=F4=E5=FA. =E9=E3=E5=F2 =
+=EC=E9 =F9=F0=E9=FA=EF =EC=E4=E2=E9=F9 =E0=FA =E4=F4=F8=E5=E9=F7=E8 =F2=E3 =
+=E4 18.08 =EC=EC=E0 =F7=F0=F1, =E0=E5=E3=E4 =EC=EA =E0=ED =F0=E5=EB=EC =EC=
+=E4=E2=E9=F9 =E0=E5=FA=E5 =F2=E3 =E4 25.08 =EC=EC=E0 =F7=F0=F1.
+=E0=F0=E9 =EE=F7=E5=E5=E4 =F9=E0=E5=EB=EC =EC=E4=F1=F4=E9=F7 =E2=ED =EC=EC=
+=E0 =E4=E4=E0=F8=EB=E4, =EB=F8=E2=F2 =E6=E4 =F7=F6=FA =E2=E1=E5=EC=E9.
+=E0=E5=EB=EC =EC=F6=F8=F3 =E0=FA =E4=EE=F1=EE=EB=E9=ED =E4=F8=F4=E5=E0=E9=
+=E9=ED =E0=ED =E9=F9 =F6=E5=F8=EA.
+
+
+
+=E4=EE=F9=EA =E9=E5=ED =F0=F2=E9=ED,
+
+
+
+=E0=F4=E9=F7
+
+--_000_2621bb6c8c8d40a2bb0791c8593f0746openuacil_
+Content-Type: text/html; charset="windows-1255"
+Content-Transfer-Encoding: quoted-printable
+
+<html>
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dwindows-1=
+255">
+<style type=3D"text/css" style=3D"display:none;"><!-- P {margin-top:0;margi=
+n-bottom:0;} --></style>
+</head>
+<body dir=3D"rtl">
+<div id=3D"divtagdefaultwrapper" style=3D"font-size:12pt;color:#000000;font=
+-family:Calibri,Helvetica,sans-serif;" dir=3D"rtl">
+<p></p>
+<p style=3D"font-family: Calibri, Helvetica, sans-serif, EmojiFont, &quot;A=
+pple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, NotoColorEmoji, &quot;S=
+egoe UI Symbol&quot;, &quot;Android Emoji&quot;, EmojiSymbols; font-size: 1=
+6px;">
+=FA=E5=EB=EC=E5 =EC=F7=E1=EC =F2=E5=E3 =F9=E1=E5=F2 =F9=EC =E3=E7=E9=E9=E4 =
+=EC=EC=E0 =E4=E5=F8=E3=FA =F0=E9=F7=E5=E3&nbsp;</p>
+<p style=3D"font-family: Calibri, Helvetica, sans-serif, EmojiFont, &quot;A=
+pple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, NotoColorEmoji, &quot;S=
+egoe UI Symbol&quot;, &quot;Android Emoji&quot;, EmojiSymbols; font-size: 1=
+6px;">
+=F6=F8=F3 =E0=FA =E4=EE=E9=E9=EC =E4=E6=E4 =E5=E0=E9=F9=E5=F8=E9 =E7=E5=F4=
+=F9=FA =E4=EE=E7=EC=E4 =EE=E4=F8=E5=F4=E0 =E0=EC =E4=E4=E2=F9=E4&nbsp;</p>
+<p></p>
+<br>
+<br>
+<div style=3D"color: rgb(0, 0, 0);">
+<hr tabindex=3D"-1" style=3D"display:inline-block; width:98%">
+<div id=3D"divRplyFwdMsg" dir=3D"rtl"><font face=3D"Calibri, sans-serif" co=
+lor=3D"#000000" style=3D"font-size:11pt"><b>=EE=E0=FA:</b> =E0=F4=E9=F7 =F8=
+=F6=E5=EF &lt;afik.ratzon@gmail.com&gt;<br>
+<b>=FE=FE=F0=F9=EC=E7:</b> =E9=E5=ED&nbsp;=F8=E0=F9=E5=EF 13 =E0=E5=E2=E5=
+=F1=E8 2023 11:12<br>
+<b>=FE=FE=E0=EC:</b> Roy Rachmany<br>
+<b>=FE=FE=F0=E5=F9=E0:</b> =F4=F8=E5=E9=F7=E8 =E1=EE=F2=E1=E3=E4 - =EE=EE=
+=EF 14</font>
+<div>&nbsp;</div>
+</div>
+<div>
+<div dir=3D"rtl">=E4=E9=E9, =E1=E5=F7=F8 =E8=E5=E1.<br>
+=F9=EE=E9 =E0=F4=E9=F7 =F8=F6=E5=EF (=FA.=E6 207917451) =F1=E8=E5=E3=F0=E8 =
+=E1=F7=E5=F8=F1 =F9=EC =EE=F2=E1=E3=E4 =E1=FA=EB=F0=E5=FA =EE=F2=F8=EB=E5=
+=FA.<br>
+=E1=E9=E5=ED =F8=E1=E9=F2=E9 =EC=F4=F0=E9 =EB=F9=E1=E5=F2 =E5=F7=F6=FA =F2=
+=E1=F8=FA=E9 =F0=E9=FA=E5=E7 =E1=EB=FA=F3, =EB=E7=EC=F7 =EE=EB=EA =E1=F9=E1=
+=E5=F2=E5=FA =E4=F8=E0=F9=E5=F0=E9=ED =EE=E2=E1=EC=E5=FA =E4=FA=F0=E5=F2=E4=
+ =EE=F9=EE=F2=E5=FA=E9=E5=FA =E9=E5=FA=F8 =E5=E9=F9 =F7=E5=F9=E9&nbsp;=E1=
+=EB=FA=E9=E1=E4, =E5=E1=EC=EE=E9=E3=E4.
+<div>=E0=FA =E4=F4=F8=E5=E9=F7=E8 =E0=F0=E9 =EE=E2=E9=F9 =E9=E7=E3 =F2=ED =
+=E0=EC=E9=F0=E5=F8 =F4=E5=F7=F1 =EE=E6=F8=E7=E9 =EB=E0=F9=F8 =E7=E9=EC=F7=
+=F0=E5 =E0=FA =E4=F2=E1=E5=E3=E4 =E1=E9=F0=E9=F0=E5 =EC=E7=EC=F7=E9=ED =F0=
+=F4=F8=E3=E9=ED.<br>
+=E0=F0=E9 =EE=F9=FA=E3=EC =E5=EE=F0=F1=E4 =EC=F2=EE=E5=E3 =E1=FA=E0=F8=E9=
+=EA =E4=E9=F2=E3 =E4=EE=F7=E5=F8=E9, =E0=EA =E6=E4 =F0=F2=F9=E4 =EE=F2=E8 =
+=EE=E0=FA=E2=F8 =EE=E1=E7=E9=F0=E4 =F4=E9=E6=E9=FA =E1=F2=F7=E1=E5=FA =E4=
+=F0=E9=FA=E5=E7 =EB=E9=E5=E5=EF =F9=E1=F8=F7=F2 =E9=F9 =EE=F1=F4=F8 =E4=E9=
+=E1=E7=F0=E5=E9=E5=FA =E5=EE=E8=EC=E5=FA =F0=E5=F1=F4=E5=FA. =E9=E3=E5=F2 =
+=EC=E9 =F9=F0=E9=FA=EF =EC=E4=E2=E9=F9 =E0=FA =E4=F4=F8=E5=E9=F7=E8 =F2=E3 =
+=E4 18.08 =EC=EC=E0 =F7=F0=F1, =E0=E5=E3=E4 =EC=EA =E0=ED =F0=E5=EB=EC =EC=
+=E4=E2=E9=F9 =E0=E5=FA=E5 =F2=E3 =E4 25.08 =EC=EC=E0 =F7=F0=F1.<br>
+=E0=F0=E9 =EE=F7=E5=E5=E4 =F9=E0=E5=EB=EC =EC=E4=F1=F4=E9=F7 =E2=ED =EC=EC=
+=E0 =E4=E4=E0=F8=EB=E4, =EB=F8=E2=F2 =E6=E4 =F7=F6=FA =E2=E1=E5=EC=E9.<br>
+=E0=E5=EB=EC =EC=F6=F8=F3 =E0=FA =E4=EE=F1=EE=EB=E9=ED =E4=F8=F4=E5=E0=E9=
+=E9=ED =E0=ED =E9=F9 =F6=E5=F8=EA.<br>
+<br>
+<br>
+<br>
+=E4=EE=F9=EA =E9=E5=ED =F0=F2=E9=ED,<br>
+<br>
+<br>
+<br>
+=E0=F4=E9=F7</div>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
+
+--_000_2621bb6c8c8d40a2bb0791c8593f0746openuacil_--
