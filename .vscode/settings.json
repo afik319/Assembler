@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "<calendar>.java": "utf8",
+        "compare": "c",
+        "type_traits": "c"
+    }
+}
