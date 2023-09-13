@@ -43,6 +43,7 @@ Each computer instruction adds between 1 to 3 words (of 12 bit) which are encode
 |  second operand | 
 
 if there are two registers as operands, there will be only two line:
+
 |  opcode |
 
 | first and second operand | 
