@@ -10,10 +10,15 @@ The assembler will output *fileName.am*, *fileName.ent*, *fileName.ext* and *fil
 ## Structure
 
 - `assembler.c` - main function definition, argv & argc processing and files processing.
+- 
 -'pre_assembler.c' - for macros deployment.
+
 -'line_parser.c' - for the parsering and classification of each line part.
+
 -'first_pass.c' - for checking the validation of each line and between the lines.
+
 -'second_pass.c' - for converting each line to its binary and 64-base representation, for validations that could not be done during the first pass, and for the creation of the output files.
+
 -'help_functions.c'
 
 ## Computer and Language Structure
