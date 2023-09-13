@@ -72,10 +72,15 @@ the macro name cannot be instruction name,  it cannot start with a digit, it has
 3. declaration of "endmcro"
 
 for example:
+
 mcro m1
+
 mov @r1,@r3
+
 add @r5, LABEL1
+
 endmcro
+
 
 Usage of labels is optional. A label is any word (reserved words not allowed) which is declared at the beginning of the sentence and ends with `:`. For example `myLabel:`. It cannot start with a digit, and has to be at most 31 characters long.
 
