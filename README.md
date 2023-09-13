@@ -37,10 +37,13 @@ The computer only works with integers.
 Each computer instruction adds between 1 to 3 words (of 12 bit) which are encoded in the following manner:
 
 |  opcode |
+
 | first operand  |
+
 |  second operand | 
 if there are two registers as operands, there will be only two line:
 |  opcode |
+
 | first and second operand | 
 
 This model consists of 16 operations, each of them has a different funct and opcode (*mov, cmp, add, sub, lea, clr, not, inc, dec, jmp, bne, jsr, red, prn, rts and stop*).
