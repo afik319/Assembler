@@ -62,9 +62,9 @@ There are 4 kinds of sentences the assembler recognizes:
 
 Maximum line length is 82. 
 
-macro deployment:
+#### macro deployment:
 
-Icludes 3 steps:
+Includes 3 steps:
 
 1. declaration with the word "mcro" and the macro name.
 the macro name cannot be instruction name,  it cannot start with a digit, it has to be at most 30 characters long and include only letters and digits.
