@@ -1,8 +1,4 @@
-# C Project: 20-bit Assembler
-
-## About
-
-This two-pass assembler was written for an imaginary computer as a final project of the course *[20465 - Systems Programming in C](https://openu.ac.il/courses/20465.htm)*.
+# C Project: 12-bit Assembler
 
 ## Usage
 
@@ -13,37 +9,34 @@ The assembler will output *fileName.am*, *fileName.ent*, *fileName.ext* and *fil
 
 ## Structure
 
-- `assembler.c` - main function definition, argv & argc processing, single file processing.
-- `preprocessor.c` - deals with macro-spreading and creates a *.am* file.
-- `first_pass.c` - implements the first pass algorithm.
-- `parse.c` - parses each line, as part of `first_pass.c`.
-- `second_pass.c` - implements the second pass algorithm.
-- `data_structures.c` - implementation of dynamic array for symbol table, code and data images.
-- `errors.c` - contains functions to thoroughly check for errors in the *.am* file.
-- `output.c` - creates the aforementioned output files.
-- `utils.c` - general all-purpose functions.
-- `constants.h` - implementation of constant values.
+- `assembler.c` - main function definition, argv & argc processing and files processing.
+-'pre_assembler.c' - for macros deployment.
+-'line_parser.c' - for the parsering and classification of each line part.
+-'first_pass.c' - for checking the validation of each line and between the lines.
+-'second_pass.c' - for converting each line to its binary and 64-base representation, for validations that could not be done during the first pass, and for the creation of the output files.
+-'help_functions.c'
 
 ## Computer and Language Structure
 
 ### Computer Structure
 The imaginary computer consists of CPU, Registers and RAM (some of the RAM is utilized as stack).
 
-The CPU has 16 registers (r0-r15). each register size is 20 bits. LSB is 0 and MSB is 19.
+The CPU has 8 registers (r0-r7). each register size is 12 bits.
 
-The CPU has a register named PSW that contains flags regarding the PC status in each moment.
-
-Memory size is 8192 and each memory cell size is 20 bits.
+Memory size is 1023 and each memory cell size is 12 bits.
 
 The computer only works with integers.
 
 ### Word and Sentence Structure
 
-Each computer instruction adds between 1 to 6 words which are encoded in the following manner:
+Each computer instruction adds between 1 to 3 words (of 12 bit) which are encoded in the following manner:
 
-| 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-|  destination address | destination address  |  destination | destination  | destination | destination | source address | source address | source | source | source | source | funct | funct | funct | funct | attribute | attribute | attribute | attribute |
+|  opcode |
+| first operand  |
+|  second operand | 
+if there are two registers as operands, there will be only two line:
+|  opcode |
+| first and second operand | 
 
 This model consists of 16 operations, each of them has a different funct and opcode (*mov, cmp, add, sub, lea, clr, not, inc, dec, jmp, bne, jsr, red, prn, rts and stop*).
 
@@ -57,7 +50,20 @@ There are 4 kinds of sentences the assembler recognizes:
 
 4. Command Sentence - Creates an action for the machine to execute upon running the program.
 
-Maximum line length is 80. 
+Maximum line length is 82. 
+
+macro deployment:
+Icludes 3 steps:
+1. declaration with the word "mcro" and the macro name.
+the macro name cannot be instruction name,  it cannot start with a digit, it has to be at most 30 characters long and include only letters and digits.
+2. lines of content for that macro.
+3. declaration of "endmcro"
+
+for example:
+mcro m1
+mov @r1,@r3
+add @r5, LABEL1
+endmcro
 
 Usage of labels is optional. A label is any word (reserved words not allowed) which is declared at the beginning of the sentence and ends with `:`. For example `myLabel:`. It cannot start with a digit, and has to be at most 31 characters long.
 
