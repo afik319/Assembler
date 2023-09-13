@@ -74,11 +74,8 @@ the macro name cannot be instruction name,  it cannot start with a digit, it has
 for example:
 
 mcro m1
-
 mov @r1,@r3
-
 add @r5, LABEL1
-
 endmcro
 
 
